@@ -8,6 +8,10 @@
 
     <table class="table w-full my-4">
         <tr>
+            <th>ユーザーID</th>
+            <td>{{ $task->user_id }}</td>
+        </tr>
+        <tr>
             <th>id</th>
             <td>{{ $task->id }}</td>
         </tr>

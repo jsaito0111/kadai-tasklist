@@ -13,11 +13,11 @@ class TasksController extends Controller
     public function index()
     {
         // メッセージ一覧を取得
-        $tasks = Task::all();         
+        $tasks = Task::all();
 
         // メッセージ一覧ビューでそれを表示
         return view('tasks.index', [     
-            'tasks' => $tasks,        
+            'tasks' => $tasks,
         ]);                                 
     }
 
@@ -41,12 +41,14 @@ class TasksController extends Controller
     {
         // バリデーション
         $request->validate([
+            'user_id' => 'required|max:255',
             'status' => 'required|max:10',   // 追加
             'content' => 'required|max:255',
         ]);
         
         // メッセージを作成
         $task = new Task;
+        $task->user_id = $request->user_id;
         $task->status = $request->status;
         $task->content = $request->content;
         $task->save();
@@ -90,6 +92,7 @@ class TasksController extends Controller
     {
         // バリデーション
         $request->validate([
+            'user_id' => 'required|max:255',
             'status' => 'required|max:10',   // 追加
             'content' => 'required|max:255',
         ]);
@@ -97,6 +100,7 @@ class TasksController extends Controller
         // idの値でメッセージを検索して取得
         $task = Task::findOrFail($id);
         // メッセージを更新
+        $task->user_id = $request->user_id;
         $task->status = $request->status;
         $task->content = $request->content;
         $task->save();

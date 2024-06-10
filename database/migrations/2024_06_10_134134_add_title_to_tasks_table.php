@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tasks', function (Blueprint $table) {
-            $table->id();
-            $table->string('content');    // contentカラム追加
-            $table->timestamps();
-            
-            $table->foreign('user_id')->references('id')->on('users');
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->string('user_id');
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tasks');
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->dropColumn('user_id');
+        });
     }
 };
