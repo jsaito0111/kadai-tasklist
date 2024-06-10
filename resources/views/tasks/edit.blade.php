@@ -12,13 +12,6 @@
             @method('PUT')
             
                 <div class="form-control my-4">
-                    <label for="user_id" class="label">
-                        <span class="label-text">ユーザーID:</span>
-                    </label>
-                    <input type="text" name="user_id" value="{{ $message->user_id }}" class="input input-bordered w-full">
-                </div>
-            
-                <div class="form-control my-4">
                     <label for="status" class="label">
                         <span class="label-text">ステータス:</span>
                     </label>
