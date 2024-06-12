@@ -17,8 +17,6 @@ class TasksController extends Controller
         if (\Auth::check()) { // 認証済みの場合
             // 認証済みユーザーを取得
             $user = \Auth::user();
-            // ユーザーの投稿の一覧を作成日時の降順で取得
-            // （後のChapterで他ユーザーの投稿も取得するように変更しますが、現時点ではこのユーザーの投稿のみ取得します）
             $tasks = $user->tasks()->orderBy('created_at', 'desc')->paginate(10);
             $data = [
                 'user' => $user,
@@ -47,12 +45,15 @@ class TasksController extends Controller
      */
     public function create()
     {
-        $task = new Task;
-
-        // メッセージ作成ビューを表示
-        return view('tasks.create', [
-            'task' => $task,
-        ]);
+        if (\Auth::check()) {// 認証済みの場合
+            $task = new Task;
+        
+            return view('tasks.create', [
+                'task' => $task,
+            ]);
+        }
+        
+        return redirect('/dashboard');
     }
 
     /**
@@ -108,11 +109,16 @@ class TasksController extends Controller
     {
         // idの値でメッセージを検索して取得
         $task = Task::findOrFail($id);
-
-        // メッセージ編集ビューでそれを表示
-        return view('tasks.edit', [
-            'task' => $task,
-        ]);
+        
+        if (\Auth::id() == $task->user_id) {
+            // メッセージ編集ビューでそれを表示
+            return view('tasks.edit', [
+                'task' => $task,
+                ]);
+        }
+        
+        return redirect('/dashboard');
+        
     }
 
     /**
@@ -128,10 +134,21 @@ class TasksController extends Controller
         
         // idの値でメッセージを検索して取得
         $task = Task::findOrFail($id);
+        
+        if (\Auth::id() == $task->user_id) {
+            // メッセージを更新
+            $task->status = $request->status;
+            $task->content = $request->content;
+            $task->save();
+            return redirect('/dashboard');
+        }
+        
+        /*
         // メッセージを更新
         $task->status = $request->status;
         $task->content = $request->content;
         $task->save();
+        */
 
         // トップページへリダイレクトさせる
         return redirect('/dashboard');
@@ -153,14 +170,12 @@ class TasksController extends Controller
         */
         
         // 認証済みユーザー（閲覧者）がその投稿の所有者である場合は投稿を削除
-        if (\Auth::id() === $task->user_id) {
+        if (\Auth::id() == $task->user_id) {
             $task->delete();
-            return back()
-                ->with('success','Delete Successful');
+            return redirect('/dashboard');
         }
 
         // 前のURLへリダイレクトさせる
-        return back()
-            ->with('Delete Failed');
+        return redirect('/dashboard');
     }
 }
