@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+#use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\TasksController;
-
+use App\Http\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,10 +17,10 @@ use App\Http\Controllers\TasksController;
 |
 */
 
-/*Route::get('/', function () {
+Route::get('/', function () {
     return view('dashboard');
 });
-*/
+
 
 Route::get('/', [TasksController::class, 'index']);
 
@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
     #Route::resource('tasks', TasksController::class, ['only' => ['store', 'destroy', 'create', 'edit']]);
     
     Route::resource('tasks', TasksController::class, );
+    Route::resource('users', UsersController::class, ['only' => ['index', 'show']]);
     
     #Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     #Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

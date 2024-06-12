@@ -11,18 +11,35 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('tasks', function (Blueprint $table) {
-            $table->string('user_id');
+        Schema::create('tasks', function (Blueprint $table) {
+            $table->id();
+            $table->string('content');    // contentカラム追加
+            $table->timestamps();
+            $table->string('status',10);
+            
+            $table->unsignedBigInteger('user_id');
+
+            // 外部キー制約
+            $table->foreign('user_id')->references('id')->on('users');
         });
+        
+        /*Schema::table('tasks', function (Blueprint $table) {
+            $table->string('user_id');
+        });*/
     }
 
     /**
      * Reverse the migrations.
      */
+    /* 
     public function down(): void
     {
-        Schema::table('tasks', function (Blueprint $table) {
-            $table->dropColumn('user_id');
-        });
+        Schema::dropIfExists('tasks');
+    }
+    */
+    
+    public function down(): void
+    {
+        Schema::dropIfExists('tasks');
     }
 };
